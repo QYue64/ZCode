@@ -1,6 +1,8 @@
 name: build-linux-arm64
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -19,8 +21,13 @@ jobs:
         run: pnpm build:sea:prepare
       - name: package sea (linux-arm64)
         run: pnpm --filter @zcode/cli sea --target linux-arm64
-      - uses: actions/upload-artifact@v4
+      - name: checksum
+        run: cd apps/zcode-cli/packages/cli/dist && sha256sum zcode-linux-arm64 > zcode-linux-arm64.sha256
+      - uses: softprops/action-gh-release@v2
         with:
-          name: zcode-linux-arm64
-          path: apps/zcode-cli/packages/cli/dist/
-          if-no-files-found: error
+          tag_name: cli-arm64-latest
+          name: cli-arm64-latest
+          overwrite_files: true
+          files: |
+            apps/zcode-cli/packages/cli/dist/zcode-linux-arm64
+            apps/zcode-cli/packages/cli/dist/zcode-linux-arm64.sha256
