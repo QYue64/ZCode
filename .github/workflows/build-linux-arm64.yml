@@ -15,8 +15,8 @@ jobs:
           node-version: 24.14.0
       - name: install
         run: pnpm install --frozen-lockfile
-      - name: build cli
-        run: pnpm --filter "@zcode/cli..." build
+      - name: sea prepare
+        run: pnpm build:sea:prepare
       - name: package sea (linux-arm64)
         run: pnpm --filter @zcode/cli sea --target linux-arm64
       - uses: actions/upload-artifact@v4
