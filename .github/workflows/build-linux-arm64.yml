@@ -20,7 +20,7 @@ jobs:
       - name: prepare
         run: pnpm build:sea:prepare
       - name: build unified distribution
-        run: pnpm build:zcode --version 0.17.1-arm64
+        run: pnpm build:zcode --version 0.17.1-arm64 --base-url https://github.com/QYue64/ZCode/releases/download/cli-arm64-latest
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: cli-arm64-latest
