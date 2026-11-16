@@ -6,7 +6,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -17,17 +17,16 @@ jobs:
           node-version: 24.14.0
       - name: install
         run: pnpm install --frozen-lockfile
-      - name: sea prepare
+      - name: prepare
         run: pnpm build:sea:prepare
-      - name: package sea (linux-arm64)
-        run: pnpm --filter @zcode/cli sea --target linux-arm64
-      - name: checksum
-        run: cd apps/zcode-cli/packages/cli/dist && sha256sum zcode-linux-arm64 > zcode-linux-arm64.sha256
+      - name: build unified distribution
+        run: pnpm build:zcode --version 0.17.1-arm64
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: cli-arm64-latest
           name: cli-arm64-latest
           overwrite_files: true
           files: |
-            apps/zcode-cli/packages/cli/dist/zcode-linux-arm64
-            apps/zcode-cli/packages/cli/dist/zcode-linux-arm64.sha256
+            dist/zcode/releases/*/zcode-*.tar.gz
+            dist/zcode/releases/*/sha256.txt
+            dist/zcode/latest.json
